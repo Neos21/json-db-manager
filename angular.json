@@ -43,7 +43,7 @@
             "index": "./client/src/index.html",
             "main": "./client/src/main.ts",
             "polyfills": "./client/src/polyfills.ts",
-            "tsConfig": "./tsconfig.app.json",
+            "tsConfig": "./tsconfig.client.json",
             "aot": true,
             "sourceMap": false,
             "assets": [
