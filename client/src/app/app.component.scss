@@ -1,0 +1,19 @@
+@import '~@angular/material/theming';
+
+$header-height: 56px;  // `.mat-toolbar-single-row` のデフォルトは 64px だが上書きする
+
+.header {
+  mat-toolbar {
+    @include mat-elevation(6);
+    
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: $header-height;
+  }
+}
+
+.main {
+  padding: $header-height 15px 30px;
+}

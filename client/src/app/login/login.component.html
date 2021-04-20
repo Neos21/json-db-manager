@@ -1,0 +1,18 @@
+<h1>Login</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>User Name</mat-label>
+    <input matInput placeholder="User Name" formControlName="userName" required>
+    <mat-error *ngIf="(userName.dirty || userName.touched) && userName.invalid">User Name Is Required</mat-error>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput type="password" placeholder="Password" formControlName="password" required>
+    <mat-error *ngIf="(password.dirty || password.touched) && password.invalid">Password Is Required</mat-error>
+  </mat-form-field>
+  
+  <p *ngIf="errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid">Login</button></p>
+</form>
