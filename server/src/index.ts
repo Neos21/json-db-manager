@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import passportLocal from 'passport-local';
 
+import constants from './constants';
+import createDbDirectoryService from './services/create-db-directory-service';
 import router from './routes/router';
 
 /** JSON DB Manager Server */
@@ -45,7 +47,7 @@ passport.use('local', new passportLocal.Strategy({
   session: true,
   passReqToCallback: true
 }, (_req, userName, password, done) => {
-  if(userName === 'CHANGE-THIS' && password === 'CHANGE-THIS') {  // TODO : 超簡易認証
+  if(userName === constants.userName && password === constants.password) {  // 超簡易認証
     console.error('Passport : Success To Auth', userName);
     return done(null, { userName });  // 成功・第2引数で渡す内容がシリアライズされる
   }
@@ -54,15 +56,24 @@ passport.use('local', new passportLocal.Strategy({
     return done(null, false);  // 失敗
   }
 }));
-passport.serializeUser(  (auth, done) => { done(null, auth); });  // シリアライズ
+passport.serializeUser  ((auth, done) => { done(null, auth); });  // シリアライズ
 passport.deserializeUser((auth, done) => { done(null, auth); });  // デシリアライズ
 
 // ルーティング
 app.use('/', router);
 
-// サーバを起動する
-const server = app.listen(process.env.PORT || 8080, () => {
-  const host = server.address().address;
-  const port = server.address().port;
-  console.log(`Listening at http${process.env.IS_HTTPS === 'true' ? 's' : ''}://${host}:${port}`);
-});
+(async () => {
+  try {
+    await createDbDirectoryService();  // DB ディレクトリがなければ作成する
+    
+    // サーバを起動する
+    const server = app.listen(process.env.PORT || 8080, () => {
+      const host = server.address().address;
+      const port = server.address().port;
+      console.log(`Listening at http${process.env.IS_HTTPS === 'true' ? 's' : ''}://${host}:${port}`);
+    });
+  }
+  catch(error) {
+    console.error('Failed To Start Server', error);
+  }
+})();

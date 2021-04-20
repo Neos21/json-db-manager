@@ -5,8 +5,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +20,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
 import { HomeComponent } from './home/home.component';
+import { DbDeleteConfirmDialogComponent } from './home/db-delete-confirm-dialog.component';
 
 @NgModule({
   imports: [
@@ -25,8 +30,12 @@ import { HomeComponent } from './home/home.component';
     ReactiveFormsModule,
     
     MatButtonModule,
+    MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
     MatToolbarModule,
     
     AppRoutingModule
@@ -38,7 +47,8 @@ import { HomeComponent } from './home/home.component';
     AppComponent,
     LoginComponent,
     
-    HomeComponent
+    HomeComponent,
+    DbDeleteConfirmDialogComponent
   ],
   providers: [
     // クッキーによるセッション管理を有効にする

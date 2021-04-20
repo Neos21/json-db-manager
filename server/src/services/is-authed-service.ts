@@ -5,7 +5,7 @@
  * @param res レスポンス
  * @param next 制御関数
  */
-export default function isAuthed(req, res, next): void {
+export default function isAuthedService(req, res, next): void {
   if(req.isAuthenticated()) {
     next();
   }

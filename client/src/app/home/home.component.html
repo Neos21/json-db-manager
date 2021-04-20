@@ -1,1 +1,32 @@
-<h1>Home</h1>
+<div class="title-bar">
+  <h1>DB List</h1>
+  <span><button type="button" mat-raised-button color="primary" [routerLink]="['/db-create']">Create DB</button></span>  <!-- TODO -->
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<p *ngIf="!isLoading && errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+
+<p *ngIf="!isLoading && !dbList.length">No DB Files.</p>
+
+<table mat-table [dataSource]="dbList" class="db-list mat-elevation-z6" *ngIf="!isLoading && dbList.length">
+  <ng-container matColumnDef="dbName">
+    <th mat-header-cell *matHeaderCellDef>DB Name</th>
+    <td mat-cell *matCellDef="let dbName">
+      <button mat-icon-button color="primary" [routerLink]="['/table']" [queryParams]="{ 'dbName': dbName }"><mat-icon>table_view</mat-icon></button>  <!-- TODO -->
+      {{ dbName }}
+    </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="deleteDb">
+    <th mat-header-cell *matHeaderCellDef>Delete</th>
+    <td mat-cell *matCellDef="let dbName">
+      <button mat-icon-button (click)="openDeleteConfirmDialog(dbName)"><mat-icon>delete</mat-icon></button>
+    </td>
+  </ng-container>
+  
+  <tr mat-header-row *matHeaderRowDef="['dbName', 'deleteDb']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['dbName', 'deleteDb'];" class="db-list-data-row"></tr>
+</table>
