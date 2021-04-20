@@ -1,6 +1,6 @@
 {
-  "name": "json-db-manager-client",
-  "description": "JSON DB Manager Client",
+  "name": "json-db-manager",
+  "description": "JSON DB Manager",
   "version": "0.0.0",
   "private": true,
   "scripts": {
