@@ -39,12 +39,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/json-db-manager",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "sourceMap": false,
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -104,5 +105,8 @@
       }
     }
   },
-  "defaultProject": "json-db-manager"
+  "defaultProject": "json-db-manager",
+  "cli": {
+    "analytics": false
+  }
 }
