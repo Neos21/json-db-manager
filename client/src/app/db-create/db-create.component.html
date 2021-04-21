@@ -1,0 +1,24 @@
+<h1>Create DB</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="db-info">
+    <mat-form-field>
+      <mat-label>DB Name</mat-label>
+      <input matInput placeholder="DB Name" formControlName="dbName" required>
+      <mat-error *ngIf="form.get('dbName').dirty || form.get('dbName').touched">
+         <span *ngIf="form.get('dbName').errors?.required">DB Name Is Required</span>
+         <span *ngIf="form.get('dbName').errors?.pattern">DB Name Is Lower Case, Number And Hyphen Only</span>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>DB Display Name</mat-label>
+      <input matInput placeholder="DB Display Name" formControlName="dbDisplayName" required>
+      <mat-error *ngIf="(form.get('dbDisplayName').dirty || form.get('dbDisplayName').touched) && form.get('dbDisplayName').errors?.required">DB Display Name Is Required</mat-error>
+    </mat-form-field>
+  </div>
+  
+  <app-column-form [columnForm]="form"></app-column-form>
+  
+  <p *ngIf="errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid">Create</button></p>
+</form>

@@ -1,0 +1,24 @@
+.columns-table {
+  width: 100%;
+  
+  tr.columns-table-data-row:hover  { background: #f5f5f5; }
+  tr.columns-table-data-row:active { background: #efefef; }
+  
+  .column-table-cell-text {
+    min-width: 100px;
+    padding-right: 10px;
+    
+    // テキストボックスのエラーは色付けする
+    .ng-invalid              { color: #f44336; }
+    .ng-invalid::placeholder { color: #c41306; }
+  }
+  
+  .column-table-cell-select {
+    min-width: 90px;
+  }
+  
+  .column-table-cell-icon {
+    width: 55px;
+    text-align: center;
+  }
+}

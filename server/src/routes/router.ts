@@ -26,8 +26,8 @@ router.post('/api/login', passport.authenticate('local', { session: true }), (re
 });
 
 router.get ('/api/db'    , isAuthedService, dbListController  );
-//router.put ('/api/db'    , isAuthed, dbCreateController);
+//router.post('/api/db'    , isAuthed, dbCreateController);
 //router.get ('/api/db/:id', isAuthed, dbGetController   );
-//router.post('/api/db/:id', isAuthed, dbUpdateController);
+//router.put ('/api/db/:id', isAuthed, dbUpdateController);
 
 export default router;
