@@ -29,13 +29,24 @@ export class DbTableComponent implements OnInit {
   
   constructor(private activatedRoute: ActivatedRoute, private httpClient: HttpClient) { }
   
+  /**
+   * 画面初期表示時
+   */
   public ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe(async (params: ParamMap) => {
-      this.dbName = params.get('dbName');
-      // TODO : パラメータなしの場合
+      const dbName = params.get('dbName');
+      if(!dbName) {
+        console.error('Query Parameter [DB Name] Does Not Provided', dbName);
+        this.errorMessage = 'Query Parameter [DB Name] Does Not Provided';
+        this.isLoading = false;
+        return;
+      }
+      
+      this.dbName = dbName;
       await this.getDb();
     });
   }
+  
   /**
    * DB を取得する
    */
