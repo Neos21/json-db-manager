@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 
@@ -16,7 +17,7 @@ export class DbCreateComponent implements OnInit {
   /** 「Create」ボタン押下後のエラーメッセージ */
   public errorMessage: string = '';
   
-  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient) { }
+  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private router: Router) { }
   
   /**
    * 画面初期表示時
@@ -25,7 +26,7 @@ export class DbCreateComponent implements OnInit {
     this.form = this.formBuilder.group({
       dbName       : ['', [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
       dbDisplayName: ['', [Validators.required]]
-      // 子コンポーネント `column-form` にて、FormArray `columns` を追加する
+      // 子コンポーネント `column-form` にて FormArray `columns` を追加する
     });
   }
   
@@ -35,14 +36,14 @@ export class DbCreateComponent implements OnInit {
   public async onSubmit(): Promise<void> {
     try {
       this.errorMessage = '';
-      const data = this.form.value;
+      const data = this.form.getRawValue();  // Disabled な項目も含めて取得する
       const result: any = await this.httpClient.post(`${environment.apiRootPath}/db`, data).toPromise();
-      console.log(result);
-      // TODO : 一覧に遷移するか
+      console.log('Create DB : Success', result);
+      this.router.navigate(['/home'], { queryParams: { successMessage: 'DB Created.' } });  // DB 一覧画面に遷移する
     }
     catch(error) {
-      console.warn('Create DB : Failed', error, error.error);
-      this.errorMessage = error.error || error.toString();
+      console.error('Create DB : Failed', error);
+      this.errorMessage = error.error?.error || error.error || error.toString();
     }
   }
 }

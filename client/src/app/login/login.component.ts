@@ -53,11 +53,11 @@ export class LoginComponent implements OnInit {
       this.errorMessage = '';
       await this.authService.login(this.userName.value, this.password.value);
       this.authGuard.isLogined = true;  // 成功・二重にログイン処理がされないようガードを設定しておく (AuthService 内でやろうとすると AuthGuard と循環依存するためココで行う)
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home'], { queryParams: { successMessage: 'Login Succeeded.' } });
     }
     catch(error) {
-      console.warn('Login : Failed', error, error.error);
-      this.errorMessage = error.error || error.toString();
+      console.error('Login : Failed', error);
+      this.errorMessage = error.error?.error || error.error || error.toString();  // ココだけ Passport 認証によるレスポンスなので、基本は `error.error` にメッセージが直接入っている
     }
   }
 }

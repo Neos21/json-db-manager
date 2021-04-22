@@ -38,14 +38,8 @@ export class ColumnFormComponent implements OnInit {
     }
     
     // データを元にフォーム部品を作る
-    this.dataSource.data.forEach((column) => {
-      (this.columnForm.get('columns') as FormArray).push(this.formBuilder.group({
-        name        : [column.name        , [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
-        originalName: [column.originalName],
-        displayName : [column.displayName , [Validators.required]],
-        type        : [column.type        , [Validators.required]],
-        required    : [column.required    , [Validators.required]]
-      }));
+    this.dataSource.data.forEach((columnData) => {
+      (this.columnForm.get('columns') as FormArray).push(this.createColumnRow(columnData));
     });
   }
   
@@ -56,8 +50,10 @@ export class ColumnFormComponent implements OnInit {
    */
   public onUp(rowIndex: number): void {
     const columns = (this.columnForm.get('columns') as FormArray);
+    this.enableColumnRows(columns);
     const newValues = this.swap(columns.value, rowIndex, rowIndex - 1);
     columns.setValue(newValues);
+    this.disableColumnRows(columns);
   }
   
   /**
@@ -67,8 +63,10 @@ export class ColumnFormComponent implements OnInit {
    */
   public onDown(rowIndex: number): void {
     const columns = (this.columnForm.get('columns') as FormArray);
+    this.enableColumnRows(columns);
     const newValues = this.swap(columns.value, rowIndex, rowIndex + 1);
     columns.setValue(newValues);
+    this.disableColumnRows(columns);
   }
   
   /**
@@ -79,13 +77,7 @@ export class ColumnFormComponent implements OnInit {
   public onAdd(rowIndex: number): void {
     const newRowData = { name: '', originalName: '', displayName: '', type: 'text', required: false };  // 新規行のデータ
     // フォーム部品を追加する
-    (this.columnForm.get('columns') as FormArray).insert(rowIndex + 1, this.formBuilder.group({
-      name        : [newRowData.name        , [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
-      originalName: [newRowData.originalName],
-      displayName : [newRowData.displayName , [Validators.required]],
-      type        : [newRowData.type        , [Validators.required]],
-      required    : [newRowData.required    , [Validators.required]]
-    }));
+    (this.columnForm.get('columns') as FormArray).insert(rowIndex + 1, this.createColumnRow(newRowData));
     // 表示用の配列にも同様に追加し、強制再描画させる
     this.dataSource.data.splice(rowIndex + 1, 0, newRowData);
     (this.dataSource as any)._data?.next(this.dataSource.data);
@@ -102,6 +94,45 @@ export class ColumnFormComponent implements OnInit {
     // 表示用の配列も同様に削除し、強制再描画させる
     this.dataSource.data.splice(rowIndex, 1);
     (this.dataSource as any)._data?.next(this.dataSource.data);
+  }
+  
+  /**
+   * フォームの1行を作成し返す
+   * 
+   * @param columnData カラムデータ
+   * @returns カラムデータを設定したフォーム1行
+   */
+  private createColumnRow(columnData: ColumnData): FormGroup {
+    return this.formBuilder.group({
+      name        : [{ value: columnData.name        , disabled: (columnData.type === 'id') }, [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
+      originalName: [         columnData.originalName                                                           ],
+      displayName : [         columnData.displayName                                     , [Validators.required]],
+      type        : [{ value: columnData.type        , disabled: (columnData.type === 'id') }, [Validators.required]],
+      required    : [{ value: columnData.required    , disabled: (columnData.type === 'id') }, [Validators.required]]
+    });
+  }
+  
+  /**
+   * 行入替の際に Disabled な項目があると失敗するので、一時的に全て活性化する
+   * 
+   * @param columns カラムフォーム
+   */
+  private enableColumnRows(columns: FormArray): void {
+    columns.controls.forEach((rowControl: FormGroup) => {
+      Object.keys(rowControl.controls).forEach((key) => rowControl.controls[key].enable());
+    });
+  }
+  
+  /**
+   * 行入替のために `this.enableColumnRows()` で活性化した項目を非活性に戻す
+   * 
+   * @param columns カラムフォーム
+   */
+  private disableColumnRows(columns: FormArray): void {
+    columns.controls.forEach((rowControl: FormGroup) => {
+      const type = rowControl.controls['type'].value;
+      if(type === 'id') ['name', 'type', 'required'].forEach((key) => rowControl.controls[key].disable());
+    });
   }
   
   /**

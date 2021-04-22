@@ -1,7 +1,9 @@
 <div class="title-bar">
   <h1>DB List</h1>
-  <span><button type="button" mat-raised-button color="primary" [routerLink]="['/db-create']">Create DB</button></span>  <!-- TODO -->
+  <span><button type="button" mat-raised-button color="primary" [routerLink]="['/db-create']">Create DB</button></span>
 </div>
+
+<div class="success-message" [ngClass]="{ 'is-hide': isHideSuccessMessage }">{{ successMessage || '&nbsp;' }}</div>
 
 <div class="loading" *ngIf="isLoading">
   <mat-spinner></mat-spinner>
@@ -9,7 +11,7 @@
 
 <p *ngIf="!isLoading && errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
 
-<p *ngIf="!isLoading && !dbList.length">No DB Files.</p>
+<p *ngIf="!isLoading && !errorMessage && !dbList.length">No DB Files.</p>
 
 <table mat-table [dataSource]="dbList" class="db-list mat-elevation-z6" *ngIf="!isLoading && dbList.length">
   <ng-container matColumnDef="dbName">

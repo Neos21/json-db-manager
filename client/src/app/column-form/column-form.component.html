@@ -17,10 +17,8 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell *matCellDef="let row let rowIndex = index" [formGroupName]="rowIndex" class="column-table-cell-select">
-        <mat-select formControlName="type" *ngIf="row.type === 'id'">
-          <mat-option value="id">ID</mat-option>
-        </mat-select>
-        <mat-select formControlName="type" *ngIf="row.type !== 'id'">
+        <mat-select formControlName="type">
+          <mat-option value="id" disabled>ID</mat-option>
           <mat-option value="text">Text</mat-option>
           <mat-option value="date">Date</mat-option>
         </mat-select>

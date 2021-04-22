@@ -21,6 +21,6 @@ export default async function dbListController(_req, res) {
   }
   catch(error) {
     res.status(500);
-    res.json({ error: error.toString() });
+    res.json({ error: 'Failed To Get DB List', errorDetails: error });
   }
 }

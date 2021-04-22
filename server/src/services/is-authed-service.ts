@@ -10,8 +10,7 @@ export default function isAuthedService(req, res, next): void {
     next();
   }
   else {
-    console.error('Is Authed : NG');
     res.status(401);  // HttpClient で `catch()` に移動させるため 401 を返す
-    res.send({ error: 'Is Authed : NG' });  // `catch()` の仮引数 `error` 内の `error` プロパティで以下のオブジェクトが参照できる
+    res.json({ error: 'Not Authed' });  // `catch(error)` の `error.error.error` で取得できる
   }
 }

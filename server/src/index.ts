@@ -48,7 +48,7 @@ passport.use('local', new passportLocal.Strategy({
   passReqToCallback: true
 }, (_req, userName, password, done) => {
   if(userName === constants.userName && password === constants.password) {  // 超簡易認証
-    console.error('Passport : Success To Auth', userName);
+    console.info('Passport : Success To Auth', userName);
     return done(null, { userName });  // 成功・第2引数で渡す内容がシリアライズされる
   }
   else {
