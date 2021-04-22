@@ -6,7 +6,7 @@ import isAuthedService from '../services/is-authed-service';
 import dbListController   from '../controllers/db-list-controller';
 import dbCreateController from '../controllers/db-create-controller';
 import dbDeleteController from '../controllers/db-delete-controller';
-//import dbGetController    from '../controllers/db-get-controller';
+import dbGetController   from '../controllers/db-get-controller';
 //import dbUpdateController from '../controllers/db-update-controller';
 
 /** ルーティング */
@@ -26,10 +26,10 @@ router.post('/api/login', passport.authenticate('local', { session: true }), (re
   res.json({ userName: req.user.userName });  // Angular の HttpClient がエラー扱いにしないよう JSON を返す
 });
 
-router.get   ('/api/db'    , isAuthedService, dbListController  );
-router.post  ('/api/db'    , isAuthedService, dbCreateController);
-router.delete('/api/db'    , isAuthedService, dbDeleteController);
-//router.get ('/api/db/:id', isAuthed, dbGetController   );
+router.get   ('/api/db'        , isAuthedService, dbListController  );
+router.post  ('/api/db'        , isAuthedService, dbCreateController);
+router.delete('/api/db'        , isAuthedService, dbDeleteController);
+router.get   ('/api/db/:dbName', isAuthedService, dbGetController   );
 //router.put ('/api/db/:id', isAuthed, dbUpdateController);
 
 export default router;

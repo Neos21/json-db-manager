@@ -25,6 +25,7 @@ import { HomeComponent } from './home/home.component';
 import { DbDeleteConfirmDialogComponent } from './home/db-delete-confirm-dialog.component';
 import { DbCreateComponent } from './db-create/db-create.component';
 import { ColumnFormComponent } from './column-form/column-form.component';
+import { DbTableComponent } from './db-table/db-table.component';
 
 @NgModule({
   imports: [
@@ -51,12 +52,16 @@ import { ColumnFormComponent } from './column-form/column-form.component';
   ],
   declarations: [
     AppComponent,
+    
     LoginComponent,
     
     HomeComponent,
     DbDeleteConfirmDialogComponent,
+    
     DbCreateComponent,
-    ColumnFormComponent
+    ColumnFormComponent,
+    
+    DbTableComponent
   ],
   providers: [
     // クッキーによるセッション管理を有効にする

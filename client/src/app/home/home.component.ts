@@ -14,9 +14,9 @@ import { DbDeleteConfirmDialogComponent } from './db-delete-confirm-dialog.compo
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  /** 成功メッセージ (画面初期表示後少ししたら非表示にする) */
+  /** 成功メッセージ (少ししたら非表示にする) */
   public successMessage: string = '';
-  /** 成功メッセージを非表示にする (コレにより CSS クラスを付与する) */
+  /** 成功メッセージを非表示にする (コレにより CSS クラスを付与して非表示のアニメーションを発生させる) */
   public isHideSuccessMessage: boolean = false;
   /** ロード中かどうか */
   public isLoading: boolean = true;

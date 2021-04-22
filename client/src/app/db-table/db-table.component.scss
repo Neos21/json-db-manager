@@ -1,0 +1,21 @@
+.title-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.success-message {
+  margin: 0 0 1em;
+  color: #008b00;
+  opacity: 1;
+  transition: opacity .3s;
+}
+
+.is-hide {
+  opacity: 0;
+}
+
+.loading mat-spinner {
+  margin-right: auto;
+  margin-left: auto;
+}
