@@ -13,13 +13,15 @@
 
 <form *ngIf="!isLoading && dataSource != null" [formGroup]="form" (ngSubmit)="onSubmit()">
   <input type="hidden" formControlName="dbName">
+  <input type="hidden" formControlName="seq">
+  
   <div class="db-info">
     <mat-form-field>
       <mat-label>DB Display Name</mat-label>
       <input matInput placeholder="DB Display Name" formControlName="dbDisplayName" required>
       <mat-error *ngIf="(form.get('dbDisplayName').dirty || form.get('dbDisplayName').touched) && form.get('dbDisplayName').errors?.required">DB Display Name Is Required</mat-error>
     </mat-form-field>
-    <span><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid">Update</button></span>
+    <span><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Updating...' : 'Update' }}</button></span>
   </div>
   
   <table mat-table [dataSource]="dataSource" formArrayName="data" class="db-table mat-elevation-z6">
@@ -45,7 +47,7 @@
         <ng-template #inputDate>
           <ng-container *ngIf="column.type === 'date'; else inputUnknown">
             <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-date">
-              <input matInput [placeholder]="column.displayName" [formControlName]="column.name">
+              <input matInput type="date" [placeholder]="column.displayName" [formControlName]="column.name">
             </td>
           </ng-container>
         </ng-template>

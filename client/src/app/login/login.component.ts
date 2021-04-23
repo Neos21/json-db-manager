@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit {
   public form: FormGroup;
   /** 「Login」ボタン押下後のエラーメッセージ */
   public errorMessage: string = '';
+  /** API 通信中かどうか */
+  public isSubmitting: boolean = false;
   
   constructor(private formBuilder: FormBuilder, private router: Router, private authGuard: AuthGuard, private authService: AuthService) { }
   
@@ -51,6 +53,7 @@ export class LoginComponent implements OnInit {
   public async onSubmit(): Promise<void> {
     try {
       this.errorMessage = '';
+      this.isSubmitting = true;
       await this.authService.login(this.userName.value, this.password.value);
       this.authGuard.isLogined = true;  // 成功・二重にログイン処理がされないようガードを設定しておく (AuthService 内でやろうとすると AuthGuard と循環依存するためココで行う)
       this.router.navigate(['/home'], { queryParams: { successMessage: 'Login Succeeded.' } });
@@ -58,6 +61,7 @@ export class LoginComponent implements OnInit {
     catch(error) {
       console.error('Login : Failed', error);
       this.errorMessage = error.error?.error || error.error || error.toString();  // ココだけ Passport 認証によるレスポンスなので、基本は `error.error` にメッセージが直接入っている
+      this.isSubmitting = false;
     }
   }
 }

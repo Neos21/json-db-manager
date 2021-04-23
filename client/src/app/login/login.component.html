@@ -14,5 +14,5 @@
   </mat-form-field>
   
   <p *ngIf="errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
-  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid">Login</button></p>
+  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Logging In...' : 'Login' }}</button></p>
 </form>

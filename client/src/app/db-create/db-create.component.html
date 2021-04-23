@@ -20,5 +20,5 @@
   <app-column-form [columnForm]="form"></app-column-form>
   
   <p *ngIf="errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
-  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid">Create</button></p>
+  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Creating...' : 'Create' }}</button></p>
 </form>

@@ -5,5 +5,5 @@
  * @returns JSON 文字列
  */
 export default function jsonStringifyFormatted(obj: any): string {
-  return JSON.stringify(obj, null, '  ');
+  return JSON.stringify(obj, null, '  ') + '\n';
 }

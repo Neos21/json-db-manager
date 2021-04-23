@@ -26,6 +26,8 @@ export class DbTableComponent implements OnInit {
   public isLoading: boolean = true;
   /** エラーメッセージ */
   public errorMessage: string = '';
+  /** API 通信中かどうか */
+  public isSubmitting: boolean = false;
   
   /** 取得したままの DB 全量 */
   public originalDb: Db = null;
@@ -37,8 +39,6 @@ export class DbTableComponent implements OnInit {
   public dataSource: MatTableDataSource<any> = null;
   /** フォーム部品 */
   public form: FormGroup;
-  /** ID のシーケンス値 */
-  public seq: number = 0;
   
   constructor(private activatedRoute: ActivatedRoute, private httpClient: HttpClient, private formBuilder: FormBuilder) { }
   
@@ -67,19 +67,29 @@ export class DbTableComponent implements OnInit {
     try {
       this.errorMessage = '';
       this.isHideSuccessMessage = false;
-      const body = {
-        db        : this.form.getRawValue(),
-        originalDb: this.originalDb,
-        seq       : this.seq
-      };
-      const result: any = await this.httpClient.put(`${environment.apiRootPath}/db-data`, body).toPromise();
+      this.isSubmitting = true;
+      
+      const db = this.form.getRawValue();
+      // データ加工
+      db.data.forEach((dataRow) => {
+        delete dataRow['_system-up_'];
+        delete dataRow['_system-down_'];
+        delete dataRow['_system-add_'];
+        delete dataRow['_system-remove_'];
+      });
+      
+      const result: any = await this.httpClient.put(`${environment.apiRootPath}/db/${this.dbName}/data`, db).toPromise();
       console.log('Update DB Data : Success', result);
+      await this.getDb();  // 再読み込み
+      this.isSubmitting = false;
       this.successMessage = 'DB Data Updated.';
       setTimeout(() => { this.isHideSuccessMessage = true; }, 4000);
     }
     catch(error) {
       console.error('Update DB Data : Failed', error);
       this.errorMessage = error.error?.error || error.error || error.toString();
+      this.successMessage = '';
+      this.isSubmitting = false;
     }
   }
   
@@ -113,8 +123,8 @@ export class DbTableComponent implements OnInit {
   public onAdd(rowIndex: number): void {
     const newDataRow = this.columns.reduce((formGroupData, column) => {
       if(column.type === 'id') {
-        this.seq = this.seq + 1;
-        formGroupData[column.name] = [this.seq, [Validators.required]];
+        this.form.get('seq').setValue(this.form.get('seq').value + 1);
+        formGroupData[column.name] = [this.form.get('seq').value, [Validators.required]];
       }
       else if(column.required) {
         formGroupData[column.name] = ['', [Validators.required]];
@@ -151,18 +161,22 @@ export class DbTableComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.originalDb = null;
+    this.columns = [];
+    this.displayedColumnNames = [];
+    this.dataSource = null;
+    this.form = null;
     try {
       const result: any = await this.httpClient.get(`${environment.apiRootPath}/db/${this.dbName}`, { params: { dbName: this.dbName }}).toPromise();
       this.originalDb = result.result;  // 控えておく
       
       this.createColumns();  // カラム定義を作る
       this.dataSource = new MatTableDataSource<any>([...this.originalDb.data]);  // データ定義を用意する
-      this.seq = this.originalDb.seq;
       this.createForm();  // カラム定義とデータ定義を元にフォーム部品を作る
     }
     catch(error) {
       console.error('Get DB : Failed', error);
       this.errorMessage = error.error?.error || error.error || error.toString();
+      this.dbName = 'DB Table : Error';
     }
     finally {
       this.isLoading = false;
@@ -188,8 +202,9 @@ export class DbTableComponent implements OnInit {
    */
   private createForm(): void {
     this.form = this.formBuilder.group({
-      dbName       : [this.originalDb.dbName       , [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
+      dbName       : this.originalDb.dbName,
       dbDisplayName: [this.originalDb.dbDisplayName, [Validators.required]],
+      seq          : this.originalDb.seq,
       data         : this.formBuilder.array([])
     });
     
@@ -222,9 +237,14 @@ export class DbTableComponent implements OnInit {
 
 /** DB */
 interface Db {
+  /** DB 物理名 */
   dbName: string;
+  /** DB 論理名 */
   dbDisplayName: string;
+  /** シーケンス値 */
   seq: number;
+  /** カラム定義 */
   columns: ColumnData[];
+  /** データ */
   data: Array<any>;
 }

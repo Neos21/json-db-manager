@@ -82,6 +82,7 @@ export class HomeComponent implements OnInit {
    */
   private async deleteDb(dbName: string): Promise<void> {
     this.errorMessage = '';
+    this.isLoading = true;  // `isSubmitting` は省略する…
     try {
       const result: any = await this.httpClient.delete(`${environment.apiRootPath}/db`, { params: { dbName } }).toPromise();
       console.log('Delete DB : Success', result);
@@ -93,6 +94,7 @@ export class HomeComponent implements OnInit {
     catch(error) {
       console.error('Delete DB : Failed', error);
       this.errorMessage = error.error?.error || error.error || error.toString();
+      this.isLoading = false;
     }
   }
 }

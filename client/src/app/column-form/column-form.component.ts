@@ -30,8 +30,9 @@ export class ColumnFormComponent implements OnInit {
     if(this.dataSource == null) {  // TODO : 新規作成時のデータを定義しておく・更新時は別途取得する
       const initialColumns: ColumnData[] = [
         { name: 'id'        , originalName: 'id'        , displayName: 'ID'        , type: 'id'  , required: true  },
-        { name: 'name'      , originalName: 'name'      , displayName: 'Name'      , type: 'text', required: true  },
-        { name: 'created-at', originalName: 'created-at', displayName: 'Created At', type: 'date', required: false },
+        { name: 'title'     , originalName: 'title'     , displayName: 'Title'     , type: 'text', required: true  },
+        { name: 'memo'      , originalName: 'memo'      , displayName: 'Memo'      , type: 'text', required: false },
+        { name: 'created-at', originalName: 'created-at', displayName: 'Created At', type: 'date', required: true  },
         { name: 'updated-at', originalName: 'updated-at', displayName: 'Updated At', type: 'date', required: false }
       ];
       this.dataSource = new MatTableDataSource<ColumnData>(initialColumns);

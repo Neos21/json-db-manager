@@ -19,7 +19,7 @@ export default async function dbDeleteController(req, res) {
     
     // ファイルが存在しなければエラーとする
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
-    if(await !isFileExistService(dbFilePath)) throw new Error(errorMessageDbFileDoesNotExist);
+    if(! await isFileExistService(dbFilePath)) throw new Error(errorMessageDbFileDoesNotExist);
     
     // ファイル削除
     await fs.unlink(dbFilePath);

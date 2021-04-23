@@ -16,6 +16,8 @@ export class DbCreateComponent implements OnInit {
   public form: FormGroup;
   /** 「Create」ボタン押下後のエラーメッセージ */
   public errorMessage: string = '';
+  /** API 通信中かどうか */
+  public isSubmitting: boolean = false;
   
   constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private router: Router) { }
   
@@ -36,6 +38,7 @@ export class DbCreateComponent implements OnInit {
   public async onSubmit(): Promise<void> {
     try {
       this.errorMessage = '';
+      this.isSubmitting = true;
       const data = this.form.getRawValue();  // Disabled な項目も含めて取得する
       const result: any = await this.httpClient.post(`${environment.apiRootPath}/db`, data).toPromise();
       console.log('Create DB : Success', result);
@@ -44,6 +47,7 @@ export class DbCreateComponent implements OnInit {
     catch(error) {
       console.error('Create DB : Failed', error);
       this.errorMessage = error.error?.error || error.error || error.toString();
+      this.isSubmitting = false;
     }
   }
 }
