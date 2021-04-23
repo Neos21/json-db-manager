@@ -1,10 +1,9 @@
 import { promises as fs } from 'fs';
+import path from 'path';
 
 import constants from '../constants';
-import jsonStringifyFormatted from '../services/json-stringify-formatted-service';
-import path from 'path';
-import isFileExistService from '../services/is-file-exist-service';
-import { columnTypes, errorMessages, isEmptyString, regExpForName } from '../services/validators-service';
+import { isFileExist, jsonStringifyFormatted } from '../services/file-utils-service';
+import { errorMessages, isEmptyString, regExpForName } from '../services/validators-service';
 
 /**
  * DB データを更新する
@@ -14,7 +13,7 @@ import { columnTypes, errorMessages, isEmptyString, regExpForName } from '../ser
  */
 export default async function dbDataUpdateController(req, res) {
   try {
-    const postDb = req.body;  // TODO : 値のバリデーション
+    const postDb = req.body;
     if(postDb == null) throw new Error(errorMessages.requestBodyEmpty);
     
     const dbName        = postDb.dbName;
@@ -27,25 +26,31 @@ export default async function dbDataUpdateController(req, res) {
     
     // ファイルの存在チェック
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
-    if(! await isFileExistService(dbFilePath)) throw new Error(errorMessages.dbFileDoesNotExist);
+    if(! await isFileExist(dbFilePath)) throw new Error(errorMessages.dbFileDoesNotExist);
     
     if(isEmptyString(dbDisplayName)) throw new Error(errorMessages.dbDisplayNameRequired);
-    if(seq == null                                                  ) throw new Error(errorMessages.seqRequired);
-    if(typeof seq !== 'number' || seq <= 0 || !Number.isInteger(seq)) throw new Error(errorMessages.seqInvalid);
+    if(seq == null                                                 ) throw new Error(errorMessages.seqRequired);
+    if(typeof seq !== 'number' || seq < 0 || !Number.isInteger(seq)) throw new Error(errorMessages.seqInvalid);
     
     // 元ファイルを読み込む
     const dbFileText = await fs.readFile(dbFilePath, 'utf-8');
     const db = JSON.parse(dbFileText);
     
     // カラム定義どおりのデータかどうか (変更の衝突を確認する)
-    // 必須入力のカラムに入力があるかどうか
     const baseColumns = db.columns;
-    const baseColumnNamesString = [...baseColumns].sort().join(',');
+    const baseColumnNamesString = baseColumns.map((baseColumn) => baseColumn.name).sort().join(',');
     data.forEach((row) => {
       const columnNamesString = Object.keys(row).sort().join(',');
-      if(baseColumnNamesString !== columnNamesString) throw new Error('Columns Of Data Are In Conflict With Column Definitions');  // カラム不一致
-      // TODO : 必須入力チェック
+      if(baseColumnNamesString !== columnNamesString) throw new Error(errorMessages.invalidColumnDefinitions);  // カラム不一致
+      // 必須入力のカラムに入力があるかどうか
+      Object.entries(row).forEach(([key, value]) => {
+        const baseColumnRequired = baseColumns.find((baseColumn) => baseColumn.name === key).required;
+        if(baseColumnRequired && isEmptyString(String(value))) throw new Error(errorMessages.requiredColumn);
+      });
     });
+    // ID カラム必須 : カラム定義とデータのカラムの一致確認はしたので、カラム定義側に ID カラムがあれば OK と判断する
+    const hasIdColumn = baseColumns.some((baseColumn) => baseColumn.type === 'id' && baseColumn.name === 'id');
+    if(!hasIdColumn) throw new Error(errorMessages.noIdColumn);
     
     // 値を差し替える
     db.dbDisplayName = dbDisplayName;

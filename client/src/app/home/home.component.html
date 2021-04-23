@@ -22,13 +22,20 @@
     </td>
   </ng-container>
   
+  <ng-container matColumnDef="renameDb">
+    <th mat-header-cell *matHeaderCellDef class="column-icon">Rename</th>
+    <td mat-cell *matCellDef="let dbName" class="column-icon">
+      <button mat-icon-button (click)="openRenameDialog(dbName)"><mat-icon>mode_edit</mat-icon></button>
+    </td>
+  </ng-container>
+  
   <ng-container matColumnDef="deleteDb">
-    <th mat-header-cell *matHeaderCellDef>Delete</th>
-    <td mat-cell *matCellDef="let dbName">
+    <th mat-header-cell *matHeaderCellDef class="column-icon">Delete</th>
+    <td mat-cell *matCellDef="let dbName" class="column-icon">
       <button mat-icon-button (click)="openDeleteConfirmDialog(dbName)"><mat-icon>delete</mat-icon></button>
     </td>
   </ng-container>
   
-  <tr mat-header-row *matHeaderRowDef="['dbName', 'deleteDb']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['dbName', 'deleteDb'];" class="db-list-data-row"></tr>
+  <tr mat-header-row *matHeaderRowDef="['dbName', 'renameDb', 'deleteDb']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['dbName', 'renameDb', 'deleteDb'];" class="db-list-data-row"></tr>
 </table>

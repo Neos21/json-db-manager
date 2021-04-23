@@ -2,8 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 import constants from '../constants';
-import jsonStringifyFormatted from '../services/json-stringify-formatted-service';
-import isFileExistService from '../services/is-file-exist-service';
+import { isFileExist, jsonStringifyFormatted } from '../services/file-utils-service';
 import { columnTypes, errorMessages, isEmptyString, regExpForName } from '../services/validators-service';
 
 /**
@@ -26,7 +25,7 @@ export default async function dbCreateController(req, res) {
     
     // ファイルの存在チェック
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
-    if(await isFileExistService(dbFilePath)) throw new Error(errorMessages.dbFileIsAlreadyExist);
+    if(await isFileExist(dbFilePath)) throw new Error(errorMessages.dbFileIsAlreadyExist);
     
     if(isEmptyString(dbDisplayName)) throw new Error(errorMessages.dbDisplayNameRequired);
     if(columns == null || !columns.length) throw new Error(errorMessages.columnsEmpty);

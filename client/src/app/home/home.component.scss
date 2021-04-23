@@ -1,11 +1,10 @@
 .title-bar {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
 }
 
 .success-message {
-  margin: 0 0 1em;
+  margin: 0 0 1rem;
   color: #008b00;
   opacity: 1;
   transition: opacity .3s;
@@ -23,10 +22,10 @@
 .db-list {
   width: 100%;
   
-  tr th:last-child,
-  tr td:last-child {
+  tr th.column-icon,
+  tr td.column-icon {
     width: 5em;
-    text-align: right;
+    text-align: center;
   }
   
   tr.db-list-data-row:hover  { background: #f5f5f5; }

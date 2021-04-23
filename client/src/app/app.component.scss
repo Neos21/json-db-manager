@@ -16,5 +16,5 @@ $header-height: 56px;  // `.mat-toolbar-single-row` のデフォルトは 64px �
 }
 
 .main {
-  padding: $header-height 15px 30px;
+  padding: calc(#{$header-height} + 15px) 15px 15px;
 }

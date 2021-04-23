@@ -45,4 +45,8 @@ export const errorMessages = {
   // シーケンス値
   seqRequired              : 'Sequence Number Is Required',
   seqInvalid               : 'Invalid Sequence Number',
+  // カラム定義とデータのカラムの相違
+  invalidColumnDefinitions : 'Columns Of Data Are In Conflict With Column Definitions',
+  // データの必須入力項目
+  requiredColumn           : 'The Value Of The Column Is Required'
 };

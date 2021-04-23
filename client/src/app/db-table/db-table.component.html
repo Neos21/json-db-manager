@@ -1,91 +1,83 @@
-<div class="title-bar">
-  <h1>{{ dbName }}</h1>
-  <span><button type="button" mat-raised-button color="primary" [routerLink]="['/column-edit']">Edit Column</button></span>  <!-- TODO -->
-</div>
-
-<div class="success-message" [ngClass]="{ 'is-hide': isHideSuccessMessage }">{{ successMessage || '&nbsp;' }}</div>
-
 <div class="loading" *ngIf="isLoading">
   <mat-spinner></mat-spinner>
 </div>
 
-<p *ngIf="!isLoading && errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
-
-<form *ngIf="!isLoading && dataSource != null" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <input type="hidden" formControlName="dbName">
-  <input type="hidden" formControlName="seq">
-  
-  <div class="db-info">
-    <mat-form-field>
-      <mat-label>DB Display Name</mat-label>
-      <input matInput placeholder="DB Display Name" formControlName="dbDisplayName" required>
-      <mat-error *ngIf="(form.get('dbDisplayName').dirty || form.get('dbDisplayName').touched) && form.get('dbDisplayName').errors?.required">DB Display Name Is Required</mat-error>
-    </mat-form-field>
+<form [formGroup]="form" *ngIf="form != null" (ngSubmit)="onSubmit()">
+  <div class="title-bar">
+    <input type="text" class="db-display-name" placeholder="DB Display Name" formControlName="dbDisplayName" required>
+    <span><button type="button" mat-raised-button color="primary" [disabled]="isLoading || dataSource == null" (click)="onAdd(dataSource.data.length - 1)">Add Row</button></span>
     <span><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Updating...' : 'Update' }}</button></span>
   </div>
   
-  <table mat-table [dataSource]="dataSource" formArrayName="data" class="db-table mat-elevation-z6">
-    <ng-container *ngFor="let column of columns; let columnIndex = index;" matColumnDef="{{ column.name }}">
-      <th mat-header-cell *matHeaderCellDef [ngClass]="{
-        'column-icon': column.name.startsWith('_'),
-        'column-id'  : column.name === 'id'
-      }">{{ column.displayName }}</th>
-      
-      <ng-container *ngIf="!column.name.startsWith('_'); else systems">
-        <ng-container *ngIf="column.type === 'id'; else inputText">
-          <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-id">
-            <input matInput [placeholder]="column.displayName" [formControlName]="column.name" readonly>
-          </td>
+  <div class="success-message" [ngClass]="{ 'is-hide': isHideSuccessMessage }">{{ successMessage || '&nbsp;' }}</div>
+  
+  <p *ngIf="!isLoading && errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+  
+  <div *ngIf="!isLoading && dataSource != null" class="db-table-wrapper mat-elevation-z6">
+    <input type="hidden" formControlName="dbName">
+    <input type="hidden" formControlName="seq">
+    
+    <table mat-table [dataSource]="dataSource" formArrayName="data" class="db-table">
+      <ng-container *ngFor="let column of columns; let columnIndex = index;" matColumnDef="{{ column.name }}"  [sticky]="column.type === 'id'">
+        <th mat-header-cell *matHeaderCellDef [ngClass]="{
+          'column-icon': column.name.startsWith('_'),
+          'column-id'  : column.name === 'id'
+        }">{{ column.displayName }}</th>
+        
+        <ng-container *ngIf="!column.name.startsWith('_'); else systems">
+          <ng-container *ngIf="column.type === 'id'; else inputText">
+            <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-id">
+              <input matInput type="text" [placeholder]="column.displayName" [formControlName]="column.name" readonly>
+            </td>
+          </ng-container>
+          <ng-template #inputText>
+            <ng-container *ngIf="column.type === 'text'; else inputDate">
+              <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-text">
+                <input matInput type="text" [placeholder]="column.displayName" [formControlName]="column.name">
+              </td>
+            </ng-container>
+          </ng-template>
+          <ng-template #inputDate>
+            <ng-container *ngIf="column.type === 'date'; else inputUnknown">
+              <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-date">
+                <input matInput type="date" [placeholder]="column.displayName" [formControlName]="column.name">
+              </td>
+            </ng-container>
+          </ng-template>
+          <ng-template #inputUnknown>
+            <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex"><mat-error>Unknown Input</mat-error></td>
+          </ng-template>
         </ng-container>
-        <ng-template #inputText>
-          <ng-container *ngIf="column.type === 'text'; else inputDate">
-            <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-text">
-              <input matInput [placeholder]="column.displayName" [formControlName]="column.name">
-            </td>
-          </ng-container>
-        </ng-template>
-        <ng-template #inputDate>
-          <ng-container *ngIf="column.type === 'date'; else inputUnknown">
-            <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-date">
-              <input matInput type="date" [placeholder]="column.displayName" [formControlName]="column.name">
-            </td>
-          </ng-container>
-        </ng-template>
-        <ng-template #inputUnknown>
-          <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex">Unknown Input</td>
+        
+        <ng-template #systems>
+          <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-icon">
+            <ng-container *ngIf="column.name === '_system-up_'; else systemDown">
+              <button type="button" mat-icon-button [disabled]="rowIndex === 0" (click)="onUp(rowIndex)"><mat-icon>arrow_upward</mat-icon></button>
+            </ng-container>
+            <ng-template #systemDown>
+              <ng-container *ngIf="column.name === '_system-down_'; else systemAdd">
+                <button type="button" mat-icon-button [disabled]="rowIndex === dataSource.data.length - 1" (click)="onDown(rowIndex)"><mat-icon>arrow_downward</mat-icon></button>
+              </ng-container>
+            </ng-template>
+            <ng-template #systemAdd>
+              <ng-container *ngIf="column.name === '_system-add_'; else systemRemove">
+                <button type="button" mat-icon-button (click)="onAdd(rowIndex)"><mat-icon>add_circle_outline</mat-icon></button>
+              </ng-container>
+            </ng-template>
+            <ng-template #systemRemove>
+              <ng-container *ngIf="column.name === '_system-remove_'; else systemUnknown">
+                <button type="button" mat-icon-button (click)="onRemove(rowIndex)"><mat-icon>delete</mat-icon></button>
+              </ng-container>
+            </ng-template>
+            <ng-template #systemUnknown>
+              <mat-error>Uknown System Column</mat-error>
+            </ng-template>
+          </td>
         </ng-template>
       </ng-container>
       
-      <ng-template #systems>
-        <td mat-cell *matCellDef="let row; let rowIndex = index" [formGroupName]="rowIndex" class="column-icon">
-          <ng-container *ngIf="column.name === '_system-up_'; else systemDown">
-            <button type="button" mat-icon-button [disabled]="rowIndex === 0" (click)="onUp(rowIndex)"><mat-icon>arrow_upward</mat-icon></button>
-          </ng-container>
-          <ng-template #systemDown>
-            <ng-container *ngIf="column.name === '_system-down_'; else systemAdd">
-              <button type="button" mat-icon-button [disabled]="rowIndex === dataSource.data.length - 1" (click)="onDown(rowIndex)"><mat-icon>arrow_downward</mat-icon></button>
-            </ng-container>
-          </ng-template>
-          <ng-template #systemAdd>
-            <ng-container *ngIf="column.name === '_system-add_'; else systemRemove">
-              <button type="button" mat-icon-button (click)="onAdd(rowIndex)"><mat-icon>add_circle_outline</mat-icon></button>
-            </ng-container>
-          </ng-template>
-          <ng-template #systemRemove>
-            <ng-container *ngIf="column.name === '_system-remove_'; else systemUnknown">
-              <button type="button" mat-icon-button [disabled]="row[column.name].type === 'id'" (click)="onRemove(rowIndex)"><mat-icon>delete</mat-icon></button>
-            </ng-container>
-          </ng-template>
-          <ng-template #systemUnknown>
-            Uknown System Column
-          </ng-template>
-        </td>
-      </ng-template>
-    </ng-container>
-    
-    <tr mat-header-row *matHeaderRowDef="displayedColumnNames"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnNames;" class="data-row"></tr>
-  </table>
-  
-  <p class="footer-buttons"><button type="button" mat-raised-button color="primary" (click)="onAdd(dataSource.data.length - 1)">Add Row</button></p>
+      <tr mat-header-row *matHeaderRowDef="displayedColumnNames; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnNames;" class="data-row"></tr>
+    </table>
+  </div>
 </form>

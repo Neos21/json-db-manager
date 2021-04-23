@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -22,6 +22,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
 import { HomeComponent } from './home/home.component';
+import { DbRenameDialogComponent } from './home/db-rename-dialog.component';
 import { DbDeleteConfirmDialogComponent } from './home/db-delete-confirm-dialog.component';
 import { DbCreateComponent } from './db-create/db-create.component';
 import { ColumnFormComponent } from './column-form/column-form.component';
@@ -32,6 +33,7 @@ import { DbTableComponent } from './db-table/db-table.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     
     MatButtonModule,
@@ -56,6 +58,7 @@ import { DbTableComponent } from './db-table/db-table.component';
     LoginComponent,
     
     HomeComponent,
+    DbRenameDialogComponent,
     DbDeleteConfirmDialogComponent,
     
     DbCreateComponent,

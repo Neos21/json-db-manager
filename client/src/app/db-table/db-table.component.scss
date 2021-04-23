@@ -1,11 +1,26 @@
 .title-bar {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 1rem;
+  
+  .db-display-name {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: none;
+    outline: none;
+    font-size: 1.7rem;
+    font-family: inherit !important;
+    font-weight: bold;
+    background: transparent;
+    
+    &:hover, &:focus { background: linear-gradient(to top, rgba(0, 0, 0, .42) 1px, transparent 1px); }
+    &.ng-invalid              { color: #f44336; }
+    &.ng-invalid::placeholder { color: #c41306; }
+  }
 }
 
 .success-message {
-  margin: 0 0 1em;
+  margin: 0 0 1rem;
   color: #008b00;
   opacity: 1;
   transition: opacity .3s;
@@ -17,15 +32,16 @@
 
 .loading mat-spinner {
   margin-right: auto;
-  margin-left: auto;
+  margin-left : auto;
 }
 
-.db-info {
-  margin-bottom: 1em;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  column-gap: 2em;
+.db-table-wrapper {
+  max-height: calc(100vh - 185px);
+  overflow: auto;
+  
+  @media(max-height: 465px) {
+    max-height: calc(100vh - 100px);
+  }
 }
 
 .db-table {
@@ -33,6 +49,25 @@
   
   tr.data-row:hover  { background: #f5f5f5; }
   tr.data-row:active { background: #efefef; }
+  
+  // データ行の高さ
+  tr.mat-row { height: auto; }
+  
+  th {
+    border-right: 1px solid rgba(0, 0, 0, .12);
+    padding-right: 10px;
+    padding-left : 10px;
+    text-align: center;
+    
+    &:last-child { border-right: 0; }
+  }
+  
+  td {
+    border-right: 1px solid rgba(0, 0, 0, .12);
+    padding: 0 10px;
+    
+    &:last-child { border-right: 0; }
+  }
   
   .mat-input-element {
     font: inherit;
@@ -49,9 +84,8 @@
   }
   
   .column-id {
-    width: 50px;
-    padding-right: 10px;
-    text-align: center;
+    width: 45px;
+    min-width: 45px;
     
     input {
       text-align: right;
@@ -60,27 +94,24 @@
   
   .column-text,
   .column-date {
-    padding-right: 10px;
-    
     .ng-invalid              { color: #f44336; }
     .ng-invalid::placeholder { color: #c41306; }
   }
   
   .column-text {
-    min-width: 100px;
+    min-width: 150px;
   }
   
   .column-date {
+    width: 150px;
     min-width: 150px;
-    max-width: 200px;
   }
   
   .column-icon {
     width: 55px;
+    min-width: 55px;
+    padding-right: 5px;
+    padding-left : 5px;
     text-align: center;
   }
-}
-
-.footer-buttons {
-  text-align: right;
 }

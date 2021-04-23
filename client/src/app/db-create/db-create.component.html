@@ -4,7 +4,7 @@
   <div class="db-info">
     <mat-form-field>
       <mat-label>DB Name</mat-label>
-      <input matInput placeholder="DB Name" formControlName="dbName" required>
+      <input matInput type="text" placeholder="DB Name" formControlName="dbName" required>
       <mat-error *ngIf="form.get('dbName').dirty || form.get('dbName').touched">
          <span *ngIf="form.get('dbName').errors?.required">DB Name Is Required</span>
          <span *ngIf="form.get('dbName').errors?.pattern">DB Name Is Lower Case, Number And Hyphen Only</span>
@@ -12,7 +12,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>DB Display Name</mat-label>
-      <input matInput placeholder="DB Display Name" formControlName="dbDisplayName" required>
+      <input matInput type="text" placeholder="DB Display Name" formControlName="dbDisplayName" required>
       <mat-error *ngIf="(form.get('dbDisplayName').dirty || form.get('dbDisplayName').touched) && form.get('dbDisplayName').errors?.required">DB Display Name Is Required</mat-error>
     </mat-form-field>
   </div>

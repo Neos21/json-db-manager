@@ -3,7 +3,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>User Name</mat-label>
-    <input matInput placeholder="User Name" formControlName="userName" required>
+    <input matInput type="text" placeholder="User Name" formControlName="userName" required>
     <mat-error *ngIf="(userName.dirty || userName.touched) && userName.invalid">User Name Is Required</mat-error>
   </mat-form-field>
   

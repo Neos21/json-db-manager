@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Rename [{{ dialogData.dbName }}] ?</h1>
+<div mat-dialog-content>
+  <p>Current DB Name : <strong>[{{ dialogData.dbName }}]</strong></p>
+  <p>Same DB Name Is Not Allowed.</p>
+  <mat-form-field>
+    <mat-label>New DB Name</mat-label>
+    <input matInput type="text" placeholder="New DB Name"
+           [(ngModel)]="newDbName" #newDbNameRef="ngModel"
+           required pattern="^[a-z0-9-]+$">
+    <mat-error *ngIf="(newDbNameRef.dirty || newDbNameRef.touched) && newDbNameRef.errors?.required">New DB Name Is Required</mat-error>
+    <mat-error *ngIf="(newDbNameRef.dirty || newDbNameRef.touched) && newDbNameRef.errors?.pattern">DB Name Is Lower Case, Number And Hyphen Only</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="center">
+  <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
+  <button type="button" mat-flat-button color="warn"
+    [mat-dialog-close]="{ dbName: dialogData.dbName, newDbName: newDbName, isRenameConfirmed: true }"
+    [disabled]="newDbNameRef.invalid || dialogData.dbName === newDbName">Rename</button>
+</div>
