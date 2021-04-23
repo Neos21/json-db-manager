@@ -16,13 +16,16 @@ const errorMessageDbFileIsAlreadyExist = 'The DB File Is Already Exist';
 export default async function dbCreateController(req, res) {
   try {
     const db = req.body;  // TODO : 値のバリデーション
-    db.seq  = 0 ;  // ID を利用したシーケンスを定義する (+1 した値を使用するので 1 から始まるようにする)
-    db.data = [];  // データを格納する配列を定義しておく
     
     // ファイルの存在チェック
     const dbName = db.dbName;
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
     if(await isFileExistService(dbFilePath)) throw new Error(errorMessageDbFileIsAlreadyExist);
+    
+    // データ加工
+    // TODO : originalName を削除する
+    db.seq  = 0 ;  // ID を利用したシーケンスを定義する (+1 した値を使用するので 1 から始まるようにする)
+    db.data = [];  // データを格納する配列を定義しておく
     
     // ファイル保存
     const text = jsonStringifyFormatted(db);

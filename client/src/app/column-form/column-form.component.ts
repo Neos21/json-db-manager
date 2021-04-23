@@ -97,7 +97,7 @@ export class ColumnFormComponent implements OnInit {
   }
   
   /**
-   * フォームの1行を作成し返す
+   * フォームの1行を作成する
    * 
    * @param columnData カラムデータ
    * @returns カラムデータを設定したフォーム1行
@@ -105,8 +105,8 @@ export class ColumnFormComponent implements OnInit {
   private createColumnRow(columnData: ColumnData): FormGroup {
     return this.formBuilder.group({
       name        : [{ value: columnData.name        , disabled: (columnData.type === 'id') }, [Validators.required, Validators.pattern('^[a-z0-9-]+$')]],
-      originalName: [         columnData.originalName                                                           ],
-      displayName : [         columnData.displayName                                     , [Validators.required]],
+      originalName: [         columnData.originalName                                                               ],
+      displayName : [         columnData.displayName                                         , [Validators.required]],
       type        : [{ value: columnData.type        , disabled: (columnData.type === 'id') }, [Validators.required]],
       required    : [{ value: columnData.required    , disabled: (columnData.type === 'id') }, [Validators.required]]
     });
