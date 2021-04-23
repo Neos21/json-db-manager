@@ -1,44 +1,10 @@
 import { promises as fs } from 'fs';
+import path from 'path';
 
 import constants from '../constants';
 import jsonStringifyFormatted from '../services/json-stringify-formatted-service';
-import path from 'path';
 import isFileExistService from '../services/is-file-exist-service';
-
-/**
- * 値があるかどうか検証する
- * 
- * @param value 値
- * @returns 空値なら `true`・値があれば `false``
- */
-function isEmptyString(value: string | null | undefined): boolean {
-  return value == null || value.trim() === '';
-}
-
-/** カラムの型 */
-const columnTypes = ['id', 'text', 'date'];
-
-/** 英小文字・数字・ハイフンのみのパターン */
-const regExpForName = new RegExp('^[a-z0-9-]+$');
-
-/** エラーメッセージ定義 */
-const errorMessages = {
-  requestBodyEmpty         : 'Request Body Is Empty',
-  dbNameRequired           : 'DB Name Is Required',
-  dbNameInvalid            : 'Invalid DB Name Pattern',
-  dbDisplayNameRequired    : 'DB Display Name Is Required',
-  columnsEmpty             : 'Columns Is Empty',
-  columnNameRequired       : 'Column Name Is Required',
-  columnNameInvalid        : 'Invalid Column Name Pattern',
-  columnNameDuplicated     : 'Duplicated Column Names',
-  columnDisplayNameRequired: 'Column Display Name Is Required',
-  columnTypeRequired       : 'Column Type Is Required',
-  columnTypeInvalid        : 'Invalid Column Type',
-  columnRequiredRequired   : 'Column Required Is Required',
-  columnRequiredInvalid    : 'Invalid Column Required',
-  noIdColumn               : 'ID Column Does Not Exist',
-  dbFileIsAlreadyExist     : 'The DB File Is Already Exist'
-};
+import { columnTypes, errorMessages, isEmptyString, regExpForName } from '../services/validators-service';
 
 /**
  * DB を新規作成する

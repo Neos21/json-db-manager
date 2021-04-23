@@ -1,11 +1,9 @@
 import { promises as fs } from 'fs';
+import path from 'path';
 
 import constants from '../constants';
-import jsonStringifyFormatted from '../services/json-stringify-formatted-service';
-import path from 'path';
 import isFileExistService from '../services/is-file-exist-service';
-
-const errorMessageDbFileDoesNotExist = 'The DB File Does Not Exist';
+import { errorMessages, isEmptyString, regExpForName } from '../services/validators-service';
 
 /**
  * DB を削除する
@@ -16,10 +14,12 @@ const errorMessageDbFileDoesNotExist = 'The DB File Does Not Exist';
 export default async function dbDeleteController(req, res) {
   try {
     const dbName = req.query.dbName;
+    if(isEmptyString(dbName)      ) throw new Error(errorMessages.dbNameRequired);
+    if(!regExpForName.test(dbName)) throw new Error(errorMessages.dbNameInvalid);
     
     // ファイルが存在しなければエラーとする
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
-    if(! await isFileExistService(dbFilePath)) throw new Error(errorMessageDbFileDoesNotExist);
+    if(! await isFileExistService(dbFilePath)) throw new Error(errorMessages.dbFileDoesNotExist);
     
     // ファイル削除
     await fs.unlink(dbFilePath);
@@ -29,7 +29,7 @@ export default async function dbDeleteController(req, res) {
   }
   catch(error) {
     res.status(500);
-    const errorMessage = (error.message === errorMessageDbFileDoesNotExist) ? errorMessageDbFileDoesNotExist : 'Failed To Delete DB';
+    const errorMessage = Object.values(errorMessages).includes(error.message) ? error.message : 'Failed To Delete DB';
     res.json({ error: errorMessage, errorDetals: error });
   }
 }
