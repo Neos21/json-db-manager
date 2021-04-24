@@ -6,7 +6,9 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { environment } from '../../environments/environment';
-import { ColumnData } from '../shared/classes/column-data';
+
+import Db from '../shared/classes/db';
+import ColumnData from '../shared/classes/column-data';
 
 /** DB 表示・編集画面 */
 @Component({
@@ -32,13 +34,13 @@ export class DbTableComponent implements OnInit {
   /** 取得したままの DB 全量 */
   public originalDb: Db = null;
   /** テーブルのカラム定義 */
-  public columns: ColumnData[] = [];
+  public columns: Array<ColumnData> = [];
   /** テーブルのカラム名称の定義 */
   public displayedColumnNames: Array<string> = [];
   /** テーブルのデータ */
   public dataSource: MatTableDataSource<any> = null;
   /** フォーム部品 */
-  public form: FormGroup;
+  public form: FormGroup = null;
   
   constructor(private activatedRoute: ActivatedRoute, private httpClient: HttpClient, private formBuilder: FormBuilder) { }
   
@@ -233,18 +235,4 @@ export class DbTableComponent implements OnInit {
     newFormArrayValues[indexB] = tempRow;
     return newFormArrayValues;
   }
-}
-
-/** DB */
-interface Db {
-  /** DB 物理名 */
-  dbName: string;
-  /** DB 論理名 */
-  dbDisplayName: string;
-  /** シーケンス値 */
-  seq: number;
-  /** カラム定義 */
-  columns: ColumnData[];
-  /** データ */
-  data: Array<any>;
 }

@@ -1,5 +1,5 @@
 /** カラム定義 */
-export class ColumnData {
+export default class ColumnData {
   /** カラム物理名 */
   name: string;
   /** カラム物理名 (変更前の値・カラム名変更時に追跡するため) */

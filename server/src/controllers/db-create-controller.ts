@@ -20,16 +20,18 @@ export default async function dbCreateController(req, res) {
     const dbDisplayName = db.dbDisplayName;
     const columns       = db.columns;
     
+    // DB 物理名
     if(isEmptyString(dbName)      ) throw new Error(errorMessages.dbNameRequired);
     if(!regExpForName.test(dbName)) throw new Error(errorMessages.dbNameInvalid);
-    
     // ファイルの存在チェック
     const dbFilePath = path.join(constants.dbDirectoryPath, `${dbName}.json`);
     if(await isFileExist(dbFilePath)) throw new Error(errorMessages.dbFileIsAlreadyExist);
     
+    // DB 論理名
     if(isEmptyString(dbDisplayName)) throw new Error(errorMessages.dbDisplayNameRequired);
-    if(columns == null || !columns.length) throw new Error(errorMessages.columnsEmpty);
+    
     // カラム定義チェック
+    if(columns == null || !columns.length) throw new Error(errorMessages.columnsEmpty);
     columns.forEach((column) => {
       if(isEmptyString(column.name)          ) throw new Error(errorMessages.columnNameRequired);
       if(!regExpForName.test(column.name)    ) throw new Error(errorMessages.columnNameInvalid);

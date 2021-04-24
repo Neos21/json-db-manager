@@ -22,3 +22,17 @@
     text-align: center;
   }
 }
+
+.mat-input-element {
+  font: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  vertical-align: bottom;
+  text-align: inherit;
+  box-sizing: content-box;
+}

@@ -1,6 +1,8 @@
 <header class="header">
   <mat-toolbar color="primary">
     <a mat-button [routerLink]="['/home']">JSON DB Manager</a>
+    <span class="spacer"></span>
+    <a mat-button *ngIf="isLogined()" [routerLink]="['/re-login']">Re-Login</a>
   </mat-toolbar>
 </header>
 

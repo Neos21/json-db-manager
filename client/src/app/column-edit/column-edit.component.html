@@ -1,0 +1,27 @@
+<h1>Edit Columns</h1>
+
+<div class="loading" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<p *ngIf="!isLoading && errorMessage && form == null"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+
+<form [formGroup]="form" *ngIf="form != null && !isLoading" (ngSubmit)="onSubmit()">
+  <div class="db-info">
+    <mat-form-field>
+      <mat-label>DB Name</mat-label>
+      <input matInput type="text" placeholder="DB Name" [value]="dbName" readonly>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>DB Display Name</mat-label>
+      <input matInput type="text" placeholder="DB Display Name" [value]="dbDisplayName" readonly>
+    </mat-form-field>
+  </div>
+  
+  <input type="hidden" formControlName="dbName">
+  
+  <app-column-form *ngIf="form != null && columns != null" [columnForm]="form" [columnsForEdit]="columns"></app-column-form>
+  
+  <p *ngIf="errorMessage"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+  <p><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Updating...' : 'Update' }}</button></p>
+</form>

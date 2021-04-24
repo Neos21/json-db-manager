@@ -2,9 +2,11 @@
   <mat-spinner></mat-spinner>
 </div>
 
+<p *ngIf="!isLoading && errorMessage && form == null"><mat-error>Error : {{ errorMessage }}</mat-error></p>
+
 <form [formGroup]="form" *ngIf="form != null" (ngSubmit)="onSubmit()">
   <div class="title-bar">
-    <input type="text" class="db-display-name" placeholder="DB Display Name" formControlName="dbDisplayName" required>
+    <input type="text" class="db-display-name" [placeholder]="dbName" formControlName="dbDisplayName" required>
     <span><button type="button" mat-raised-button color="primary" [disabled]="isLoading || dataSource == null" (click)="onAdd(dataSource.data.length - 1)">Add Row</button></span>
     <span><button type="submit" mat-raised-button color="accent" [disabled]="form.invalid || isSubmitting">{{ isSubmitting ? 'Updating...' : 'Update' }}</button></span>
   </div>

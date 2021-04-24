@@ -13,7 +13,7 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   /** ログインフォーム */
-  public form: FormGroup;
+  public form: FormGroup = null;
   /** 「Login」ボタン押下後のエラーメッセージ */
   public errorMessage: string = '';
   /** API 通信中かどうか */

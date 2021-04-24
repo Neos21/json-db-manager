@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { ColumnData } from '../shared/classes/column-data';
+import ColumnData from '../classes/column-data';
 
 /** カラム定義フォーム */
 @Component({
@@ -13,9 +13,11 @@ import { ColumnData } from '../shared/classes/column-data';
 })
 export class ColumnFormComponent implements OnInit {
   /** カラム定義フォーム */
-  @Input() public columnForm: FormGroup;
+  @Input() public columnForm: FormGroup = null;
+  /** 編集用のカラム定義 */
+  @Input() public columnsForEdit: Array<ColumnData> = null;
   /** カラム定義データ */
-  @Input() public dataSource: MatTableDataSource<ColumnData>;
+  public dataSource: MatTableDataSource<ColumnData> = null;
   /** カラム定義1行あたりの入力項目 */
   public displayedColumns: Array<string> = ['name', 'displayName', 'type', 'required', 'row-up', 'row-down', 'row-add', 'row-remove'];
   
@@ -27,8 +29,9 @@ export class ColumnFormComponent implements OnInit {
   public ngOnInit(): void {
     this.columnForm.addControl('columns', this.formBuilder.array([]));  // `this.columnForm` に代入すると親コンポーネントのフォームを上書きしておかしくなる
     
-    if(this.dataSource == null) {  // TODO : 新規作成時のデータを定義しておく・更新時は別途取得する
-      const initialColumns: ColumnData[] = [
+    if(this.columnsForEdit == null) {
+      // 新規作成時
+      const initialColumns: Array<ColumnData> = [
         { name: 'id'        , originalName: 'id'        , displayName: 'ID'        , type: 'id'  , required: true  },
         { name: 'title'     , originalName: 'title'     , displayName: 'Title'     , type: 'text', required: true  },
         { name: 'memo'      , originalName: 'memo'      , displayName: 'Memo'      , type: 'text', required: false },
@@ -36,6 +39,13 @@ export class ColumnFormComponent implements OnInit {
         { name: 'updated-at', originalName: 'updated-at', displayName: 'Updated At', type: 'date', required: false }
       ];
       this.dataSource = new MatTableDataSource<ColumnData>(initialColumns);
+    }
+    else {
+      const columns: Array<ColumnData> = this.columnsForEdit.map((column) => {
+        column.originalName = column.name;
+        return column;
+      });
+      this.dataSource = new MatTableDataSource<ColumnData>(columns);
     }
     
     // データを元にフォーム部品を作る

@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 })
 export class DbCreateComponent implements OnInit {
   /** 登録フォーム */
-  public form: FormGroup;
+  public form: FormGroup = null;
   /** 「Create」ボタン押下後のエラーメッセージ */
   public errorMessage: string = '';
   /** API 通信中かどうか */

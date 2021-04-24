@@ -13,6 +13,10 @@ $header-height: 56px;  // `.mat-toolbar-single-row` のデフォルトは 64px �
     left: 0;
     height: $header-height;
   }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
 }
 
 .main {

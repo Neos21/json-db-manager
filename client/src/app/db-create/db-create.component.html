@@ -1,6 +1,6 @@
 <h1>Create DB</h1>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" *ngIf="form != null" (ngSubmit)="onSubmit()">
   <div class="db-info">
     <mat-form-field>
       <mat-label>DB Name</mat-label>

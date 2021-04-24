@@ -20,22 +20,24 @@ import { CustomInterceptor } from './custom.interceptor';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-
+import { ReLoginComponent } from './re-login/re-login.component';
+import { ColumnFormComponent } from './shared/column-form/column-form.component';
 import { HomeComponent } from './home/home.component';
 import { DbRenameDialogComponent } from './home/db-rename-dialog.component';
 import { DbDeleteConfirmDialogComponent } from './home/db-delete-confirm-dialog.component';
 import { DbCreateComponent } from './db-create/db-create.component';
-import { ColumnFormComponent } from './column-form/column-form.component';
 import { DbTableComponent } from './db-table/db-table.component';
+import { ColumnEditComponent } from './column-edit/column-edit.component';
 
 @NgModule({
   imports: [
+    // Angular
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    
+    // Angular Material
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
@@ -46,25 +48,30 @@ import { DbTableComponent } from './db-table/db-table.component';
     MatSelectModule,
     MatTableModule,
     MatToolbarModule,
-    
+    // App
     AppRoutingModule
   ],
   bootstrap: [
     AppComponent
   ],
   declarations: [
+    // Root
     AppComponent,
-    
+    // Login
     LoginComponent,
-    
+    ReLoginComponent,
+    // Shared
+    ColumnFormComponent,
+    // Home
     HomeComponent,
     DbRenameDialogComponent,
     DbDeleteConfirmDialogComponent,
-    
+    // DB Create
     DbCreateComponent,
-    ColumnFormComponent,
-    
-    DbTableComponent
+    // DB Table
+    DbTableComponent,
+    // Column Edit
+    ColumnEditComponent
   ],
   providers: [
     // クッキーによるセッション管理を有効にする
