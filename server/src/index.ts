@@ -42,7 +42,7 @@ import { initializePassport } from './services/auth-service';
     await createDbDirectory();
     
     // サーバを起動する
-    const server = app.listen(process.env.PORT || 8080, () => {
+    const server = app.listen(process.env.PORT || 2222, () => {
       const host = server.address().address;
       const port = server.address().port;
       console.log(`Listening at http${process.env.IS_HTTPS === 'true' ? 's' : ''}://${host}:${port}`);

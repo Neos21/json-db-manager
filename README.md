@@ -9,7 +9,7 @@ JSON DB Manager.
 - `./client/src/environments/environment.prod.ts`
     - `production` : Boolean
     - `apiRootPath` : String
-        - Dev : `http://localhost:8080/api`
+        - Dev : `http://localhost:2222/api`
         - Prod : `/api`
 - `$ npm run devc`
     - <http://localhost:4200/>
@@ -22,20 +22,26 @@ JSON DB Manager.
 ## Server
 
 - `./server/index.ts`
-    - `process.env.PORT` : Default `8080`
-- `./server/.env`
+    - `process.env.PORT` : Default `2222`
+- `./.env`
 - `./server/constants.ts`
     - `USERNAME` : Required
     - `PASSWORD` : Required
     - `DB_DIRECTORY_PATH` : Required, Resolve Path Relative To The Project Root `./`
 - `$ npm run devs`
-    - <http://localhost:8080/> (Default)
+    - <http://localhost:2222/> (Default)
+
+
+## Run
+
 - `$ npm run builds`
     - `./server/dist/`
     - `$ npm run build` (Client And Server)
 - `$ npm start`
-    - <http://localhost:8080/> (Default)
+    - <http://localhost:2222/> (Default)
     - Refers `./client/dist/`
+- `$ nohup npm start &`
+- `$ pkill npm`
 
 
 ## Links

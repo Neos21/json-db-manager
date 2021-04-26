@@ -39,7 +39,7 @@ export function initializePassport(app: express): void {
  */
 export function authController(router: express.Router, urlPath: string): void {
   router.post(urlPath, passport.authenticate('local', { session: true }), (req, res) => {
-    res.json({ userName: req.user?.userName });  // Angular の HttpClient がエラー扱いにしないよう JSON を返す
+    res.json({ userName: req.user.userName });  // Angular の HttpClient がエラー扱いにしないよう JSON を返す
   });
 }
 
