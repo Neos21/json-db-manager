@@ -20,7 +20,7 @@
     <input type="hidden" formControlName="seq">
     
     <table mat-table [dataSource]="dataSource" formArrayName="data" class="db-table">
-      <ng-container *ngFor="let column of columns; let columnIndex = index;" matColumnDef="{{ column.name }}"  [sticky]="column.type === 'id'">
+      <ng-container *ngFor="let column of columns; let columnIndex = index;" matColumnDef="{{ column.name }}">
         <th mat-header-cell *matHeaderCellDef [ngClass]="{
           'column-icon': column.name.startsWith('_'),
           'column-id'  : column.name === 'id'

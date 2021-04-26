@@ -13,36 +13,38 @@
 
 <p *ngIf="!isLoading && !errorMessage && !dbList.length">No DB Files.</p>
 
-<table mat-table [dataSource]="dbList" *ngIf="!isLoading && dbList.length" class="db-list mat-elevation-z6">
-  <ng-container matColumnDef="dbName">
-    <th mat-header-cell *matHeaderCellDef>DB Name</th>
-    <td mat-cell *matCellDef="let dbName">
-      <button mat-icon-button color="primary" [routerLink]="['/db-table']" [queryParams]="{ 'dbName': dbName }"><mat-icon>table_view</mat-icon></button>
-      {{ dbName }}
-    </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="editColumns">
-    <th mat-header-cell *matHeaderCellDef class="column-icon">Edit Columns</th>
-    <td mat-cell *matCellDef="let dbName" class="column-icon">
-      <button mat-icon-button [routerLink]="['/column-edit']" [queryParams]="{ 'dbName': dbName }"><mat-icon>edit_note</mat-icon></button>
-    </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="renameDb">
-    <th mat-header-cell *matHeaderCellDef class="column-icon">Rename</th>
-    <td mat-cell *matCellDef="let dbName" class="column-icon">
-      <button mat-icon-button (click)="openRenameDialog(dbName)"><mat-icon>mode_edit</mat-icon></button>
-    </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="deleteDb">
-    <th mat-header-cell *matHeaderCellDef class="column-icon">Delete</th>
-    <td mat-cell *matCellDef="let dbName" class="column-icon">
-      <button mat-icon-button (click)="openDeleteConfirmDialog(dbName)"><mat-icon>delete</mat-icon></button>
-    </td>
-  </ng-container>
-  
-  <tr mat-header-row      *matHeaderRowDef="['dbName', 'editColumns', 'renameDb', 'deleteDb']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['dbName', 'editColumns', 'renameDb', 'deleteDb']" class="db-list-data-row"></tr>
-</table>
+<div class="db-list-wrapper mat-elevation-z6">
+  <table mat-table [dataSource]="dbList" *ngIf="!isLoading && dbList.length" class="db-list">
+    <ng-container matColumnDef="dbName">
+      <th mat-header-cell *matHeaderCellDef>DB Name</th>
+      <td mat-cell *matCellDef="let dbName" class="db-name">
+        <button mat-icon-button color="primary" [routerLink]="['/db-table']" [queryParams]="{ 'dbName': dbName }"><mat-icon>table_view</mat-icon></button>
+        {{ dbName }}
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="editColumns">
+      <th mat-header-cell *matHeaderCellDef class="column-icon">Edit Columns</th>
+      <td mat-cell *matCellDef="let dbName" class="column-icon">
+        <button mat-icon-button [routerLink]="['/column-edit']" [queryParams]="{ 'dbName': dbName }"><mat-icon>edit_note</mat-icon></button>
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="renameDb">
+      <th mat-header-cell *matHeaderCellDef class="column-icon">Rename</th>
+      <td mat-cell *matCellDef="let dbName" class="column-icon">
+        <button mat-icon-button (click)="openRenameDialog(dbName)"><mat-icon>mode_edit</mat-icon></button>
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="deleteDb">
+      <th mat-header-cell *matHeaderCellDef class="column-icon">Delete</th>
+      <td mat-cell *matCellDef="let dbName" class="column-icon">
+        <button mat-icon-button (click)="openDeleteConfirmDialog(dbName)"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+    
+    <tr mat-header-row      *matHeaderRowDef="['dbName', 'editColumns', 'renameDb', 'deleteDb']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['dbName', 'editColumns', 'renameDb', 'deleteDb']" class="db-list-data-row"></tr>
+  </table>
+</div>

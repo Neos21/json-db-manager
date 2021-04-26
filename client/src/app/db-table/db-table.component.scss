@@ -8,6 +8,7 @@
     padding: 0;
     border: none;
     outline: none;
+    min-width: 1px;
     font-size: 1.7rem;
     font-family: inherit !important;
     font-weight: bold;
@@ -36,12 +37,9 @@
 }
 
 .db-table-wrapper {
-  max-height: calc(100vh - 185px);
+  margin-bottom: 1rem;
+  max-height: 70vh;
   overflow: auto;
-  
-  @media(max-height: 465px) {
-    max-height: calc(100vh - 100px);
-  }
 }
 
 .db-table {
@@ -84,8 +82,9 @@
   }
   
   .column-id {
-    width: 45px;
-    min-width: 45px;
+    width: 40px;
+    min-width: 40px;
+    padding-left: 5px;
     
     input {
       text-align: right;
@@ -103,8 +102,9 @@
   }
   
   .column-date {
-    width: 150px;
-    min-width: 150px;
+    width: 120px;
+    min-width: 120px;
+    padding-right: 5px;
   }
   
   .column-icon {

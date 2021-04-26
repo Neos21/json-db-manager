@@ -19,8 +19,24 @@
   margin-left: auto;
 }
 
+.db-list-wrapper {
+  margin-bottom: 1rem;
+  overflow: auto;
+}
+
 .db-list {
   width: 100%;
+  
+  th {
+    padding-right: 5px;
+    padding-left : 5px;
+    text-align: center;
+  }
+  
+  td {
+    padding-right: 5px;
+    padding-left : 5px;
+  }
   
   tr th.column-icon,
   tr td.column-icon {
@@ -30,4 +46,10 @@
   
   tr.db-list-data-row:hover  { background: #f5f5f5; }
   tr.db-list-data-row:active { background: #efefef; }
+  
+  .db-name {
+    padding-right: 10px;
+    padding-left : 10px;
+    white-space: nowrap;
+  }
 }

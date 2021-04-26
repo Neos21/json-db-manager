@@ -1,5 +1,5 @@
-<div [formGroup]="columnForm">
-  <table mat-table [dataSource]="dataSource" formArrayName="columns" class="columns-table mat-elevation-z6">
+<div [formGroup]="columnForm" class="columns-table-wrapper mat-elevation-z6">
+  <table mat-table [dataSource]="dataSource" formArrayName="columns" class="columns-table">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td mat-cell *matCellDef="let row let rowIndex = index" [formGroupName]="rowIndex" class="column-table-cell-text">
