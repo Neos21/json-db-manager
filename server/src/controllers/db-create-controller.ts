@@ -13,12 +13,12 @@ import { columnTypes, errorMessages, isEmptyString, regExpForName } from '../ser
  */
 export default async function dbCreateController(req, res) {
   try {
-    const db = req.body;
-    if(db == null) throw new Error(errorMessages.requestBodyEmpty);
+    const postDb = req.body;
+    if(postDb == null) throw new Error(errorMessages.requestBodyEmpty);
     
-    const dbName        = db.dbName;
-    const dbDisplayName = db.dbDisplayName;
-    const columns       = db.columns;
+    const dbName        = postDb.dbName;
+    const dbDisplayName = postDb.dbDisplayName;
+    const postColumns   = postDb.columns;
     
     // DB 物理名
     if(isEmptyString(dbName)      ) throw new Error(errorMessages.dbNameRequired);
@@ -31,8 +31,8 @@ export default async function dbCreateController(req, res) {
     if(isEmptyString(dbDisplayName)) throw new Error(errorMessages.dbDisplayNameRequired);
     
     // カラム定義チェック
-    if(columns == null || !columns.length) throw new Error(errorMessages.columnsEmpty);
-    columns.forEach((column) => {
+    if(postColumns == null || !postColumns.length) throw new Error(errorMessages.columnsEmpty);
+    const columns = postColumns.map((column) => {
       if(isEmptyString(column.name)          ) throw new Error(errorMessages.columnNameRequired);
       if(!regExpForName.test(column.name)    ) throw new Error(errorMessages.columnNameInvalid);
       if(isEmptyString(column.displayName)   ) throw new Error(errorMessages.columnDisplayNameRequired);
@@ -40,19 +40,30 @@ export default async function dbCreateController(req, res) {
       if(!columnTypes.includes(column.type)  ) throw new Error(errorMessages.columnTypeInvalid);
       if(column.required == null             ) throw new Error(errorMessages.columnRequiredRequired);
       if(typeof column.required !== 'boolean') throw new Error(errorMessages.columnRequiredInvalid);
+      // `originalName` はこの時点で破棄する
+      return {
+        'name'        : column.name,
+        'display-name': column.displayName,
+        'type'        : column.type,
+        'required'    : column.required
+      };
     });
     // ID カラム必須
-    const hasIdColumn = columns.some((column) => column.type === 'id' && column.name === 'id');
+    const hasIdColumn = postColumns.some((column) => column.type === 'id' && column.name === 'id');
     if(!hasIdColumn) throw new Error(errorMessages.noIdColumn);
     // カラム名の重複チェック
-    const columnNames = columns.map((column) => column.name);
+    const columnNames = postColumns.map((column) => column.name);
     const columnNamesSet = new Set(columnNames);  // 重複した値がセットされない Set を利用する
     if(columnNames.length !== columnNamesSet.size) throw new Error(errorMessages.columnNameDuplicated);
     
-    // データ加工
-    db.columns.forEach((column) => { delete column.originalName; });  // `originalName` は保存しない
-    db.seq  = 0 ;  // ID を利用したシーケンスを定義する (+1 した値を使用するので 1 から始まるようにする)
-    db.data = [];  // データを格納する配列を定義しておく
+    // DB データを準備する
+    const db = {
+      'db-name'        : dbName,
+      'db-display-name': dbDisplayName,
+      'columns'        : columns,
+      'seq'            : 0,  // ID を利用したシーケンスを定義する (+1 した値を使用するので 1 から始まるようにする)
+      'data'           : []  // データを格納する配列を定義しておく
+    };
     
     // ファイル保存
     const text = jsonStringifyFormatted(db);

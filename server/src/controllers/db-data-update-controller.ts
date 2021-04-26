@@ -53,9 +53,9 @@ export default async function dbDataUpdateController(req, res) {
     if(!hasIdColumn) throw new Error(errorMessages.noIdColumn);
     
     // 値を差し替える
-    db.dbDisplayName = dbDisplayName;
-    db.seq           = seq;
-    db.data          = data;
+    db['db-display-name'] = dbDisplayName;
+    db.seq                = seq;
+    db.data               = data;
     
     // ファイル保存
     const text = jsonStringifyFormatted(db);

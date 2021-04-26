@@ -33,7 +33,7 @@ export default async function dbNameUpdateController(req, res) {
     const db = JSON.parse(dbFileText);
     
     // ファイル内の DB 物理名を更新する
-    db.dbName = newDbName;
+    db['db-name'] = newDbName;
     
     // 新ファイル名で書き換えた内容を保存する
     const text = jsonStringifyFormatted(db);

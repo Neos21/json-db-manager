@@ -24,7 +24,15 @@ export default async function dbGetController(req, res) {
     // ファイル取得
     const dbFileText = await fs.readFile(dbFilePath, 'utf-8');
     const db = JSON.parse(dbFileText);
-    db.columns.forEach((column) => { db.originalName = column.name; });  // `originalName` を用意しておく
+    
+    // データ加工
+    db.dbName = db['db-name'];
+    db.dbDisplayName = db['db-display-name'];
+    db.columns.forEach((column) => {
+      column.displayName  = column['display-name'];
+      delete column['display-name'];
+      column.originalName = column.name;  // `originalName` を用意しておく
+    });
     
     res.status(200);
     res.json({ result: db });

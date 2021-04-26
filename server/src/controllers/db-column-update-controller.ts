@@ -19,8 +19,8 @@ export default async function dbColumnUpdateController(req, res) {
     const postDb = req.body;
     if(postDb == null) throw new Error(errorMessages.requestBodyEmpty);
     
-    const dbName  = postDb.dbName;
-    const columns = postDb.columns;
+    const dbName      = postDb.dbName;
+    const postColumns = postDb.columns;
     
     // DB 物理名
     if(isEmptyString(dbName)      ) throw new Error(errorMessages.dbNameRequired);
@@ -30,8 +30,8 @@ export default async function dbColumnUpdateController(req, res) {
     if(! await isFileExist(dbFilePath)) throw new Error(errorMessages.dbFileDoesNotExist);
     
     // カラム定義チェック
-    if(columns == null || !columns.length) throw new Error(errorMessages.columnsEmpty);
-    columns.forEach((column) => {
+    if(postColumns == null || !postColumns.length) throw new Error(errorMessages.columnsEmpty);
+    postColumns.forEach((column) => {
       if(isEmptyString(column.name)          ) throw new Error(errorMessages.columnNameRequired);
       if(!regExpForName.test(column.name)    ) throw new Error(errorMessages.columnNameInvalid);
       if(isEmptyString(column.displayName)   ) throw new Error(errorMessages.columnDisplayNameRequired);
@@ -41,10 +41,10 @@ export default async function dbColumnUpdateController(req, res) {
       if(typeof column.required !== 'boolean') throw new Error(errorMessages.columnRequiredInvalid);
     });
     // ID カラム必須
-    const hasIdColumn = columns.some((column) => column.type === 'id' && column.name === 'id');
+    const hasIdColumn = postColumns.some((column) => column.type === 'id' && column.name === 'id');
     if(!hasIdColumn) throw new Error(errorMessages.noIdColumn);
     // カラム名の重複チェック
-    const columnNames = columns.map((column) => column.name);
+    const columnNames = postColumns.map((column) => column.name);
     const columnNamesSet = new Set(columnNames);  // 重複した値がセットされない Set を利用する
     if(columnNames.length !== columnNamesSet.size) throw new Error(errorMessages.columnNameDuplicated);
     
@@ -53,14 +53,14 @@ export default async function dbColumnUpdateController(req, res) {
     const db = JSON.parse(dbFileText);
     
     // 削除されたカラム : 元ファイルの `name` と、リクエストボディの `originalName` を比較する
-    const originalColumnNames = columns.map((column) => column.originalName);
+    const originalColumnNames = postColumns.map((column) => column.originalName);
     const deletedColumns = db.columns.filter((beforeColumn) => !originalColumnNames.includes(beforeColumn.name));
     // カラム名の変更 : 新規カラムではなく `originalName` と `name` が異なるカラム
-    const renamedColumns = columns.filter((column) => column.originalName !== '' && column.name !== column.originalName);
+    const renamedColumns = postColumns.filter((column) => column.originalName !== '' && column.name !== column.originalName);
     // 新規追加カラム
-    const newColumns = columns.filter((column) => column.originalName === '');
+    const newColumns = postColumns.filter((column) => column.originalName === '');
     // カラムの型変更 : 現状は `text` から `date` に変更する際、値が `YYYY-MM-DD` でない場合に空値にする
-    const typeChangedTextToDateColumns = columns.filter((column) => {
+    const typeChangedTextToDateColumns = postColumns.filter((column) => {
       const beforeColumn = db.columns.find((beforeColumn) => beforeColumn.name === column.originalName);
       if(!beforeColumn) return false;  // 新規追加カラムは除外する
       return (beforeColumn.type === 'text' && column.type === 'date');
@@ -98,7 +98,14 @@ export default async function dbColumnUpdateController(req, res) {
     db.data = newData;
     
     // カラム定義を差し替える
-    columns.forEach((column) => { delete column.originalName; });  // `originalName` は保存しない
+    const columns = postColumns.map((column) => {
+      return {
+        'name'        : column.name,
+        'display-name': column.displayName,
+        'type'        : column.type,
+        'required'    : column.required
+      };
+    });
     db.columns = columns;
     
     // ファイル保存
