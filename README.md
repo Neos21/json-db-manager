@@ -16,7 +16,6 @@ JSON DB Manager.
     - `$ npm run ng`
 - `$ npm run buildc`
     - `./client/dist/`
-    - `$ npm run build` (Client And Server)
 
 
 ## Server
@@ -30,13 +29,13 @@ JSON DB Manager.
     - `DB_DIRECTORY_PATH` : Required, Resolve Path Relative To The Project Root `./`
 - `$ npm run devs`
     - <http://localhost:2222/> (Default)
+- `$ npm run builds`
+    - `./server/dist/`
 
 
 ## Run
 
-- `$ npm run builds`
-    - `./server/dist/`
-    - `$ npm run build` (Client And Server)
+- `$ npm run build` (Client And Server)
 - `$ npm start`
     - <http://localhost:2222/> (Default)
     - Refers `./client/dist/`
